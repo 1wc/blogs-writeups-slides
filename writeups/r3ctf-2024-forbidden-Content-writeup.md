@@ -326,7 +326,7 @@ flag位于`/var/jb/var/root/flag`中，rwx为`-r--------  1 root   wheel`。显�
 
 其实漏洞还是比较好找的，我们能很明显地感觉到register_callback对全局变量的处理有些奇怪：remove_callback会先deallocate掉global_callback_port后设置为空，没什么问题。但register_callback会直接deallocate掉global_callback_port，然后再设置为新指定的port。但这里register_callback中调用的deallocate明显是多余的，其实应该直接调用remove_callback，也就是要将global_callback_port清零之后再重新设置。当前这种实现是存在double deallocate漏洞的！
 
-## Exploitment
+## Exploitation
 
 Double mach deallocate漏洞的利用Samuel在Pillow中已经展示过了，感兴趣的可以深入学习，我这里不对mig源码作深入研究和展开。
 
